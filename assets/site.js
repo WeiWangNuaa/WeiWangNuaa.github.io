@@ -20,15 +20,19 @@
  const search = document.getElementById('publication-search');
  const chips = Array.from(document.querySelectorAll('.filter-chip'));
  const empty = document.getElementById('publication-empty');
+ const groups = document.querySelectorAll('[data-publication-group]');
  if (items.length) {
    let year = 'all';
    const update = () => {
      const query = (search?.value || '').toLocaleLowerCase().trim();
      let shown = 0;
      items.forEach(item => {
-       const match = (year === 'all' || item.dataset.pubYear === year) && (!query || (item.dataset.pubSearch || '').includes(query));
+       const match = (year === 'all' || item.dataset.pubYear === year) && (!query || item.textContent.toLocaleLowerCase().includes(query));
        item.hidden = !match;
        if (match) shown++;
+     });
+     groups.forEach(group => {
+       group.hidden = !group.querySelector('[data-pub-year]:not([hidden])');
      });
      if (empty) empty.hidden = shown > 0;
    };
